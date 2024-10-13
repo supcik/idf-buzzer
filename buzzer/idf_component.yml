@@ -1,3 +1,9 @@
-version: 0.15.0
+version: 1.0.0
 description: Buzzer component for ESP-IDF
+maintainers:
+  - Jacques Supcik <jacques@supcik.net>
+url: https://github.com/supcik/idf-buzzer/tree/main/status_led
+repository: https://github.com/supcik/idf-buzzer.git
 license: MIT
+dependencies:
+  idf: ">=5.3"
