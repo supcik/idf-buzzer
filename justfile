@@ -23,4 +23,5 @@ save-defconfig:
     idf.py save-defconfig --project-dir {{COMPONENT}}/examples/{{PATH}}
 
 update-settings:
-     jq '."idf.buildPath"|="${workspaceFolder}/{{COMPONENT}}/examples/{{PATH}}/build"' ./.vscode/settings.json
+     jq '."idf.buildPath"|="${workspaceFolder}/{{COMPONENT}}/examples/{{PATH}}/build"' ./.vscode/settings.json \
+     > ./.vscode/temp.json && mv ./.vscode/temp.json ./.vscode/settings.json

@@ -86,6 +86,7 @@ void Buzzer::Task() {
 }
 
 Buzzer::Buzzer(const gpio_num_t gpio_num,
+               ledc_clk_cfg_t clk_cfg,
                ledc_mode_t speed_mode,
                ledc_timer_bit_t timer_bit,
                ledc_timer_t timer_num,
@@ -101,8 +102,8 @@ Buzzer::Buzzer(const gpio_num_t gpio_num,
     ledc_timer.speed_mode = speed_mode_;
     ledc_timer.timer_num = timer_num_;
     ledc_timer.duty_resolution = timer_bit_;
-    ledc_timer.freq_hz = 4000;  // Can be any value
-    ledc_timer.clk_cfg = LEDC_AUTO_CLK;
+    ledc_timer.freq_hz = 4000;  // Can be any value, but put something valid
+    ledc_timer.clk_cfg = clk_cfg;
     ESP_ERROR_CHECK(ledc_timer_config(&ledc_timer));
 
     // Configure Channel

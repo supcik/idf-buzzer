@@ -23,7 +23,7 @@ jobs:
     strategy:
       matrix:
         target: [esp32s3]
-        esp_idf_version: [v5.3.1]
+        esp_idf_version: [v5.3.2]
         path: ['buzzer/examples/get_started']
 
     steps:

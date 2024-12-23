@@ -26,6 +26,7 @@
 class Buzzer {
    public:
     Buzzer(const gpio_num_t gpio_num,
+           ledc_clk_cfg_t clk_cfg = LEDC_AUTO_CLK,
            ledc_mode_t speed_mode = LEDC_LOW_SPEED_MODE,
            ledc_timer_bit_t timer_bit = LEDC_TIMER_13_BIT,
            ledc_timer_t timer_num = LEDC_TIMER_0,
