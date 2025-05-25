@@ -1,4 +1,4 @@
-version: 2.1.0
+version: 3.0.0
 description: Buzzer component for ESP-IDF
 maintainers:
   - Jacques Supcik <jacques@supcik.net>
