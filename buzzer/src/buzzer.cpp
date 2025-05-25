@@ -91,7 +91,8 @@ Buzzer::Buzzer(const gpio_num_t gpio_num,
                ledc_timer_bit_t timer_bit,
                ledc_timer_t timer_num,
                ledc_channel_t channel,
-               uint32_t idle_level)
+               uint32_t idle_level,
+               ledc_sleep_mode_t sleep_mode)
     : speed_mode_(speed_mode),
       timer_bit_(timer_bit),
       timer_num_(timer_num),
@@ -114,6 +115,7 @@ Buzzer::Buzzer(const gpio_num_t gpio_num,
     ledc_channel.gpio_num = gpio_num;
     ledc_channel.duty = 0;
     ledc_channel.hpoint = 0;
+    ledc_channel.sleep_mode = sleep_mode;
     ESP_ERROR_CHECK(ledc_channel_config(&ledc_channel));
     ESP_ERROR_CHECK(ledc_stop(speed_mode_, channel_, idle_level_));
 

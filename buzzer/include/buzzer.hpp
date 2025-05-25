@@ -31,7 +31,8 @@ class Buzzer {
            ledc_timer_bit_t timer_bit = LEDC_TIMER_13_BIT,
            ledc_timer_t timer_num = LEDC_TIMER_0,
            ledc_channel_t channel = LEDC_CHANNEL_0,
-           uint32_t idle_level = 0);
+           uint32_t idle_level = 0,
+           ledc_sleep_mode_t sleep_mode = LEDC_SLEEP_MODE_NO_ALIVE_NO_PD);
     virtual ~Buzzer();
     BaseType_t Beep(uint32_t frequency, uint32_t duration_ms);
 
