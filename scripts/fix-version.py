@@ -27,4 +27,3 @@ with open("buzzer/idf_component.yml", "r") as f:
 
 with open("buzzer/idf_component.yml", "w") as f:
     dump(data, f, Dumper=Dumper, default_flow_style=False, allow_unicode=True, sort_keys=False)
-
