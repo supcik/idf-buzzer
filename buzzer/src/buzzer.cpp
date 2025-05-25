@@ -18,6 +18,7 @@
 #include "buzzer.hpp"
 
 #include <inttypes.h>
+#include <string.h>
 
 #include "esp_log.h"
 #include "freertos/FreeRTOS.h"
@@ -85,39 +86,44 @@ void Buzzer::Task() {
     }
 }
 
-Buzzer::Buzzer(const gpio_num_t gpio_num,
-               ledc_clk_cfg_t clk_cfg,
-               ledc_mode_t speed_mode,
-               ledc_timer_bit_t timer_bit,
-               ledc_timer_t timer_num,
-               ledc_channel_t channel,
-               uint32_t idle_level,
-               ledc_sleep_mode_t sleep_mode)
-    : speed_mode_(speed_mode),
-      timer_bit_(timer_bit),
-      timer_num_(timer_num),
-      channel_(channel),
-      idle_level_(idle_level) {
-    // Configure Timer
-    ledc_timer_config_t ledc_timer = {};
-    ledc_timer.speed_mode = speed_mode_;
-    ledc_timer.timer_num = timer_num_;
-    ledc_timer.duty_resolution = timer_bit_;
-    ledc_timer.freq_hz = 4000;  // Can be any value, but put something valid
-    ledc_timer.clk_cfg = clk_cfg;
-    ESP_ERROR_CHECK(ledc_timer_config(&ledc_timer));
+// Makes a defaut configuration for the timer and the channel.
+void Buzzer::MakeConfig(ledc_timer_config_t* timer_config,
+                        ledc_channel_config_t* channel_config,
+                        const gpio_num_t gpio_num,
+                        const ledc_clk_cfg_t clk_cfg,
+                        const ledc_mode_t speed_mode,
+                        const ledc_timer_bit_t timer_bit,
+                        const ledc_timer_t timer_num,
+                        const ledc_channel_t channel) {
+    memset(timer_config, 0, sizeof(ledc_timer_config_t));
+    timer_config->speed_mode = speed_mode;
+    timer_config->timer_num = timer_num;
+    timer_config->duty_resolution = timer_bit;
+    timer_config->freq_hz = 4000;  // Can be any value, but put something valid
+    timer_config->clk_cfg = clk_cfg;
 
-    // Configure Channel
-    ledc_channel_config_t ledc_channel = {};
-    ledc_channel.speed_mode = speed_mode_;
-    ledc_channel.channel = channel_;
-    ledc_channel.timer_sel = timer_num_;
-    ledc_channel.gpio_num = gpio_num;
-    ledc_channel.duty = 0;
-    ledc_channel.hpoint = 0;
-    ledc_channel.sleep_mode = sleep_mode;
-    ESP_ERROR_CHECK(ledc_channel_config(&ledc_channel));
+    memset(channel_config, 0, sizeof(ledc_channel_config_t));
+    channel_config->speed_mode = speed_mode;
+    channel_config->channel = channel;
+    channel_config->timer_sel = timer_num;
+    channel_config->gpio_num = gpio_num;
+    channel_config->duty = 0;
+    channel_config->hpoint = 0;
+}
+
+Buzzer::Buzzer(ledc_timer_config_t* timer_config,
+               ledc_channel_config_t* channel_config,
+               uint32_t idle_level)
+    : idle_level_(idle_level) {
+    // Configure Timer
+    ESP_ERROR_CHECK(ledc_timer_config(timer_config));
+    ESP_ERROR_CHECK(ledc_channel_config(channel_config));
     ESP_ERROR_CHECK(ledc_stop(speed_mode_, channel_, idle_level_));
+
+    speed_mode_ = timer_config->speed_mode;
+    timer_bit_ = timer_config->duty_resolution;
+    timer_num_ = timer_config->timer_num;
+    channel_ = channel_config->channel;
 
     queue_handle_ = xQueueCreate(kQueueSize, sizeof(message_t));
     BaseType_t res = xTaskCreate(

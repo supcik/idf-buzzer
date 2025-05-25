@@ -41,7 +41,10 @@ void PrintStat() {
 
 void app_main(void) {
     ESP_LOGI(kTag, "Starting buzzer test");
-    Buzzer buzzer(GPIO_NUM_11);
+    ledc_timer_config_t* timer_config;
+    ledc_channel_config_t* channel_config;
+    Buzzer::MakeConfig(timer_config, channel_config, GPIO_NUM_11);
+    Buzzer buzzer(timer_config, channel_config);
     while (true) {
         ESP_LOGI(kTag, "Beep");
         for (int i = 1000; i < 9000; i += 500) {
