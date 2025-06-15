@@ -118,13 +118,13 @@ Buzzer::Buzzer(ledc_timer_config_t* timer_config,
     // Configure Timer
     ESP_ERROR_CHECK(ledc_timer_config(timer_config));
     ESP_ERROR_CHECK(ledc_channel_config(channel_config));
-    ESP_ERROR_CHECK(ledc_stop(speed_mode_, channel_, idle_level_));
 
     speed_mode_ = timer_config->speed_mode;
     timer_bit_ = timer_config->duty_resolution;
     timer_num_ = timer_config->timer_num;
     channel_ = channel_config->channel;
 
+    ESP_ERROR_CHECK(ledc_stop(speed_mode_, channel_, idle_level_));
     queue_handle_ = xQueueCreate(kQueueSize, sizeof(message_t));
     BaseType_t res = xTaskCreate(
         TaskForwarder, "buzzer_task", kStackSize, this, uxTaskPriorityGet(nullptr), &task_handle_);
